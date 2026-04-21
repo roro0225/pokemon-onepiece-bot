@@ -42,7 +42,4 @@ def check():
             if keyword in text:
                 send_discord(f"検知: @{account} に {keyword}")
                 break
-
-while True:
     check()
-    time.sleep(300)
