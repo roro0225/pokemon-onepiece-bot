@@ -22,15 +22,14 @@ keywords = [
 "入荷",
 "再販",
 "抽選",
-"コンビニ",
-"セブン",
-"ファミマ",
-"ローソン"
+"コンビニ"
 ]
 
 def send_discord(message):
     data = {"content": message}
     requests.post(WEBHOOK_URL, json=data)
+
+send_discord("BOT起動テスト成功")
 
 def check():
     for account in accounts:
@@ -42,4 +41,5 @@ def check():
             if keyword in text:
                 send_discord(f"検知: @{account} に {keyword}")
                 break
-    check()
+
+check()
