@@ -1,5 +1,5 @@
 import requests
-import time
+from bs4 import BeautifulSoup
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1493663712546914314/aVHScNhzEeoRPGvkG6y2_lIwRJQIsrM6P47RtP2IF95SlNldiFTDaRD0sgwmI1N9Ji9T"
 
@@ -29,18 +29,33 @@ keywords = [
 ]
 
 def send_discord(message):
-    data = {"content": message}
-    requests.post(WEBHOOK_URL, json=data)
+    try:
+        requests.post(WEBHOOK_URL, json={"content": message}, timeout=10)
+    except:
+        pass
 
 def check():
+    headers = {"User-Agent": "Mozilla/5.0"}
+    
     for account in accounts:
-        url = f"https://nitter.net/{account}"
-        r = requests.get(url)
-        text = r.text
+        try:
+            url = f"https://nitter.net/{account}"
+            r = requests.get(url, headers=headers, timeout=10)
+            soup = BeautifulSoup(r.text, "html.parser")
 
-        for keyword in keywords:
-            if keyword in text:
-                send_discord(f"検知: @{account} に {keyword}")
-                break
+            tweets = soup.find_all("div", class_="tweet-content")
+
+            if not tweets:
+                continue
+
+            latest = tweets[0].text
+
+            for keyword in keywords:
+                if keyword in latest:
+                    send_discord(f"検知: @{account}\n{latest}")
+                    break
+
+        except:
+            continue
 
 check()
