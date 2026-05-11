@@ -1,4 +1,4 @@
-name: Fukuoka Card Monitor
+name: Card Monitor
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-bot:
+  run:
     runs-on: ubuntu-latest
 
     steps:
